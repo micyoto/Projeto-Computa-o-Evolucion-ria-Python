@@ -218,7 +218,7 @@ SOFTWARE.
   * **Curso:** Engenharia da Computação
   * **Disciplinas:** Programação em Python & Computação Evolucionária
   * **Professores:** Guido Pantuza e André Paganotti
-  * **Aluno autor:** Michael Yoshiaki Todoroki
+  * **Aluno / Autor:** Michael Yoshiaki Todoroki
   * **Data:** Novembro/2025
 
 <!-- end list -->
