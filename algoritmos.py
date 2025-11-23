@@ -29,7 +29,7 @@ def funcao_rastrigin_restrita(x):
     penalidade = 1e9 * (violations_g + violations_h)
     return f_val + penalidade
 
-# --- CLASSE ALGORITMO GENÉTICO (Atualizada com parâmetros do Professor) ---
+# --- CLASSE ALGORITMO GENÉTICO (Mantida igual, padrão Professor) ---
 
 class AlgoritmoGenetico:
     def __init__(self, nvar, limites, params):
@@ -40,14 +40,9 @@ class AlgoritmoGenetico:
         self.fitness = []
         self.best_history = []
         
-        # --- LÓGICA DO PROFESSOR ---
-        # 1. População Dinâmica: npop = max(20, 4 * ceil(nvar/2))
+        # LÓGICA DO PROFESSOR
         self.n_pop = int(max(20, 4 * np.ceil(nvar / 2)))
-        
-        # 2. Mutação Dinâmica: pmut = 1.0 / nvar
         self.pmut = 1.0 / float(nvar)
-        
-        # Parâmetros de Configuração
         self.pcruz = params['AG_PROB_CRUZAMENTO']
         self.eta_cruz = params['AG_ETA_CRUZ']
         self.eta_mut = params['AG_ETA_MUT']
@@ -61,7 +56,6 @@ class AlgoritmoGenetico:
         self.fitness = np.array(vals)
 
     def sbx_crossover(self, p1, p2):
-        """Cruzamento SBX (Simulated Binary Crossover) real."""
         if random.random() > self.pcruz:
             return p1.copy(), p2.copy()
         
@@ -93,7 +87,6 @@ class AlgoritmoGenetico:
         return np.clip(c1, self.xmin, self.xmax), np.clip(c2, self.xmin, self.xmax)
 
     def polynomial_mutation(self, ind):
-        """Mutação Polinomial real."""
         mutant = ind.copy()
         for i in range(self.nvar):
             if random.random() <= self.pmut:
@@ -118,55 +111,42 @@ class AlgoritmoGenetico:
         self.inicializar()
         evals = 0
         limit_evals = self.params['N_AVALIACOES']
-        
         self.avaliar(funcao_custo)
         evals += self.n_pop
         
-        # Rastreia melhor inicial
         best_idx = np.argmin(self.fitness)
         self.best_history.append(self.fitness[best_idx])
         
         while evals < limit_evals:
-            # 1. Elitismo: Salva os melhores
             sorted_idx = np.argsort(self.fitness)
             elites = [self.populacao[i].copy() for i in sorted_idx[:self.elitismo]]
             
-            # 2. Seleção (Torneio)
             parents = []
             for _ in range(self.n_pop):
                 a, b = random.sample(range(self.n_pop), 2)
                 parents.append(self.populacao[a] if self.fitness[a] < self.fitness[b] else self.populacao[b])
             
-            # 3. Cruzamento e Mutação
             new_pop = []
-            # Gera filhos para preencher (N_POP - ELITISMO)
-            # Mas geramos pares, então vamos gerar e depois cortar
             while len(new_pop) < self.n_pop:
-                # Seleciona pares aleatórios dos vencedores do torneio
                 p1 = random.choice(parents)
                 p2 = random.choice(parents)
-                
                 c1, c2 = self.sbx_crossover(p1, p2)
                 c1 = self.polynomial_mutation(c1)
                 c2 = self.polynomial_mutation(c2)
-                
                 new_pop.extend([c1, c2])
             
-            # Reconstrói população: Elites + Filhos (truncado)
             n_filhos_necessarios = self.n_pop - self.elitismo
             proxima_geracao = elites + new_pop[:n_filhos_necessarios]
             self.populacao = np.array(proxima_geracao)
             
-            # Avalia
             self.avaliar(funcao_custo)
-            evals += n_filhos_necessarios # Só conta as novas avaliações (elites já foram avaliados)
-            
+            evals += n_filhos_necessarios
             self.best_history.append(np.min(self.fitness))
             
         best_final_idx = np.argmin(self.fitness)
         return self.populacao[best_final_idx], self.fitness[best_final_idx], self.best_history
 
-# --- CLASSE EVOLUÇÃO DIFERENCIAL (DE/rand/1/bin) ---
+# --- CLASSE EVOLUÇÃO DIFERENCIAL (Atualizada: DE/best/1/bin) ---
 
 class EvolucaoDiferencial:
     def __init__(self, nvar, limites, params):
@@ -181,6 +161,10 @@ class EvolucaoDiferencial:
         self.populacao = np.random.uniform(self.xmin, self.xmax, (self.params['N_POPULACAO'], self.nvar))
         
     def executar(self, funcao_custo):
+        """
+        Variante: DE/best/1/bin
+        Vetor base = Melhor indivíduo da população atual.
+        """
         self.inicializar()
         n_pop = self.params['N_POPULACAO']
         F = self.params['DE_F']
@@ -195,19 +179,26 @@ class EvolucaoDiferencial:
         self.best_history.append(self.fitness[best_idx])
         
         while evals < limit_evals:
+            # Encontra o índice do MELHOR indivíduo da geração atual (Estratégia DE/best)
+            idx_best = np.argmin(self.fitness)
+            x_best = self.populacao[idx_best]
+            
             nova_populacao = np.copy(self.populacao)
             
             for i in range(n_pop):
+                # Sorteia r2 e r3 (que aqui chamaremos de r1 e r2 para simplificar a notação de código)
+                # Eles devem ser diferentes de i
                 indices = list(range(n_pop))
                 indices.remove(i)
-                r1, r2, r3 = random.sample(indices, 3)
+                
+                # Sorteia 2 índices aleatórios
+                r1, r2 = random.sample(indices, 2)
                 
                 x_r1 = self.populacao[r1]
                 x_r2 = self.populacao[r2]
-                x_r3 = self.populacao[r3]
                 
-                # Mutação: v = xr1 + F * (xr2 - xr3)
-                vetor_ruido = x_r1 + F * (x_r2 - x_r3)
+                # Mutação DE/best/1: v = x_best + F * (x_r1 - x_r2)
+                vetor_ruido = x_best + F * (x_r1 - x_r2)
                 
                 # Crossover Binomial
                 j_rand = random.randint(0, self.nvar - 1)
@@ -217,12 +208,14 @@ class EvolucaoDiferencial:
                     if random.random() <= CR or j == j_rand:
                         vetor_teste[j] = vetor_ruido[j]
                 
+                # Garante limites
                 vetor_teste = np.clip(vetor_teste, self.xmin, self.xmax)
                 
                 # Seleção Greedy
                 fit_teste = funcao_custo(vetor_teste)
                 evals += 1
                 
+                # Se o filho for melhor ou igual, substitui o pai
                 if fit_teste <= self.fitness[i]:
                     nova_populacao[i] = vetor_teste
                     self.fitness[i] = fit_teste
