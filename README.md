@@ -212,13 +212,13 @@ SOFTWARE.
 
 -----
 
-## 🧑‍💻 Autor
+## 🧑‍💻 Autoria
 
-**Michael Yoshiaki Todoroki**
-
-  * **Curso:** Engenharia da Computação
-  * **Disciplinas:** Linguagem de Programação & Computação Evolucionária
   * **Instituição:** CEFET-MG
+  * **Curso:** Engenharia da Computação
+  * **Disciplinas:** Programação em Python & Computação Evolucionária
+  * **Professores:** Guido Pantuza e André Paganotti
+  * **Aluno autor:** Michael Yoshiaki Todoroki
   * **Data:** Novembro/2025
 
 <!-- end list -->
