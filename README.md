@@ -13,7 +13,7 @@ Trabalho final das matérias de Computação Evolucionária e Python. Une os con
 
 Este projeto implementa e compara duas meta-heurísticas de otimização global — **Algoritmos Genéticos (AG)** e **Evolução Diferencial (DE)** — aplicadas a funções matemáticas complexas com e sem restrições.
 
-Desenvolvido como requisito avaliativo para as disciplinas de **Linguagem de Programação (Python)** e **Computação Evolucionária**.
+Desenvolvido como requisito avaliativo para as disciplinas de **Programação em Python** e **Computação Evolucionária**.
 
 ---
 
