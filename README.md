@@ -1,13 +1,19 @@
 
+# Projeto-Computacao-Evolucionaria-Python
+
+Trabalho final das matérias de Computação Evolucionária e Python. Une os conceitos das duas matérias, implementando algoritmos genéticos e evolução diferencial em Python. Aplicado na função esfera e na função rastrigin, gerando gráficos estatísticos e relatórios automáticos.
+
+---
+
 # Otimização Evolucionária: Comparativo AG vs DE
 
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=CONCLUIDO&color=GREEN&style=for-the-badge)
 ![Badge Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python)
 ![Badge License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
-Este projeto implementa e compara duas das mais importantes meta-heurísticas de otimização global — **Algoritmos Genéticos (AG)** e **Evolução Diferencial (DE)** — aplicadas a funções matemáticas complexas (unimodais e multimodais) com restrições severas.
+Este projeto implementa e compara duas meta-heurísticas de otimização global — **Algoritmos Genéticos (AG)** e **Evolução Diferencial (DE)** — aplicadas a funções matemáticas complexas com e sem restrições.
 
-Desenvolvido como requisito avaliativo integrado para as disciplinas de **Linguagem de Programação (Python)** e **Computação Evolucionária**.
+Desenvolvido como requisito avaliativo para as disciplinas de **Linguagem de Programação (Python)** e **Computação Evolucionária**.
 
 ---
 
@@ -16,11 +22,11 @@ Desenvolvido como requisito avaliativo integrado para as disciplinas de **Lingua
 1. [Sobre o Projeto](#-sobre-o-projeto)
 2. [Funções Objetivo (O Problema)](#-funções-objetivo-o-problema)
 3. [Estrutura e Lógica (Sob o Capô)](#-estrutura-de-dados-e-lógica-sob-o-capô)
-4. [Tecnologias Utilizadas](#%EF%B8%8F-tecnologias-utilizadas)
-5. [Estrutura de Arquivos](#-estrutura-de-arquivos)
-6. [Como Executar](#-como-executar)
-7. [Configuração](#%EF%B8%8F-configuração-configtxt)
-8. [Resultados Esperados](#-resultados-esperados)
+4. [Resultados Obtidos e Análise](#-resultados-obtidos-e-análise)
+5. [Tecnologias Utilizadas](#%EF%B8%8F-tecnologias-utilizadas)
+6. [Estrutura de Arquivos](#-estrutura-de-arquivos)
+7. [Como Executar](#-como-executar)
+8. [Configuração](#%EF%B8%8F-configuração-configtxt)
 9. [Licença](#-licença)
 10. [Autor](#-autor)
 
@@ -31,10 +37,11 @@ Desenvolvido como requisito avaliativo integrado para as disciplinas de **Lingua
 O software foi construído utilizando uma arquitetura modular baseada em Orientação a Objetos (POO), separando a lógica matemática do fluxo de controle e da configuração. O sistema realiza múltiplas execuções independentes para garantir robustez estatística e gera relatórios automáticos de desempenho.
 
 ### Funcionalidades Principais
-* **Configuração via Arquivo de Texto:** Parâmetros lidos dinamicamente de `config.txt`.
-* **Análise Estatística:** Cálculo de Média, Desvio Padrão, Melhor e Pior caso em 40 execuções.
-* **Visualização:** Geração automática de curvas de convergência e boxplots com `matplotlib`.
-* **Comparativo:** Confronto direto entre AG (operadores SBX/Polinomial) e DE (estratégia *Best*).
+* **Configuração via Arquivo de Texto:** Todos os parâmetros (tamanho da população, taxas de mutação, etc.) são lidos dinamicamente de um arquivo externo (`config.txt`), sem necessidade de alterar o código-fonte.
+* **Execução Estatística:** Realiza *N* execuções independentes e calcula métricas como Média, Desvio Padrão, Melhor e Pior caso.
+* **Visualização de Dados:** Geração automática de gráficos de convergência e boxplots comparativos usando `matplotlib`.
+* **Relatórios Automatizados:** Exportação dos resultados consolidados para `relatorio_final.txt`.
+* **Tratamento de Erros:** Validação robusta de arquivos de entrada e conversão de tipos.
 
 ---
 
@@ -43,14 +50,14 @@ O software foi construído utilizando uma arquitetura modular baseada em Orienta
 Os algoritmos foram testados em dois cenários distintos de complexidade:
 
 ### 1. Função Quadrática (Esfera)
-Uma função unimodal clássica, perfeita para testar a capacidade de **convergência e precisão numérica** do algoritmo. É como descer uma tigela lisa até o fundo.
+Uma função unimodal clássica, perfeita para testar a capacidade de **convergência e precisão numérica** do algoritmo. É como descer uma tigela lisa até o fundo. O objetivo é chegar em `f(x) = 0`.
 
-![Função Esfera](Figure_4_Esfera.jpg)
+![Função Esfera](Figure_4_Esfera.png)
 
 ### 2. Função Rastrigin Restrita
-Uma função multimodal extremamente complexa, cheia de "armadilhas" (mínimos locais). Neste projeto, ela possui restrições severas de igualdade e desigualdade, testando a **robustez** do algoritmo.
+Uma função multimodal extremamente complexa, cheia de "armadilhas" (mínimos locais). Neste projeto, ela possui restrições severas de igualdade e desigualdade (Penalidade Estática), testando a **robustez** do algoritmo em evitar zonas proibidas.
 
-![Função Rastrigin](Figure_1_Rastrigin.jpg)
+![Função Rastrigin](Figure_1_Rastrigin.png)
 
 ---
 
@@ -77,6 +84,32 @@ Utilizamos a variante **DE/best/1/bin**, focada em velocidade:
 2.  **O Salto (Diferença):** Calcula a diferença vetorial entre dois outros indivíduos e soma ao líder: `Novo = Melhor + F * (A - B)`.
 3.  **Crossover Binomial:** Substitui componentes do vetor antigo pelo novo com probabilidade $CR$.
 4.  **Seleção Gulosa:** O filho só substitui o pai se for estritamente melhor.
+
+---
+
+## 📈 Resultados Obtidos e Análise
+
+Abaixo estão os gráficos gerados automaticamente pelo sistema durante as simulações.
+
+### Cenário 1: Função Quadrática
+
+| Gráfico de Convergência | Distribuição (Boxplot) |
+|:---:|:---:|
+| ![Convergencia Quad](grafico_convergencia_Quadratica.png) | ![Boxplot Quad](grafico_boxplot_Quadratica.png) |
+
+**Análise:**
+Na função Quadrática (unimodal), a estratégia **DE/best** mostrou-se superior. Como não há mínimos locais para "enganar" o algoritmo, seguir o melhor indivíduo permitiu uma descida direta e agressiva em direção ao ótimo global, alcançando precisão próxima de zero absoluto ($10^{-15}$). O AG também convergiu com sucesso, mas com uma velocidade logarítmica menor.
+
+### Cenário 2: Função Rastrigin Restrita
+
+| Gráfico de Convergência | Distribuição (Boxplot) |
+|:---:|:---:|
+| ![Convergencia Rast](grafico_convergencia_Rastrigin_Restrita.png) | ![Boxplot Rast](grafico_boxplot_Rastrigin_Restrita.png) |
+
+**Análise:**
+Neste cenário complexo, houve um *trade-off* interessante:
+* **Melhor Solução:** O **DE** encontrou a melhor solução absoluta do experimento (~199), superando o melhor resultado do AG (~884).
+* **Estabilidade:** O AG foi muito mais estável. O gráfico de boxplot mostra que o DE possui alta variância (caixa grande e outliers), indicando que, embora capaz de achar o ótimo, ele frequentemente fica preso em regiões de penalidade alta devido à sua natureza "gulosa". O AG, com operadores SBX, manteve-se consistente na busca, embora menos agressivo.
 
 ---
 
@@ -149,21 +182,9 @@ DE_CR: 0.9                 # Taxa de crossover
 
 -----
 
-## 📈 Resultados Esperados
-
-Ao final da execução, o sistema gera:
-
-1.  **Gráficos de Convergência:** Mostrando a velocidade de queda do erro ao longo das gerações.
-2.  **Boxplots:** Mostrando a dispersão e estabilidade das soluções finais.
-3.  **Relatório de Texto:** Tabela comparativa com Melhor, Pior, Média e Desvio Padrão.
-
-*Observação: A variante DE/best tende a convergir muito rápido em funções unimodais, mas pode apresentar instabilidade em funções fortemente restritas.*
-
------
-
 ## 📝 Licença
 
-Este projeto está licenciado sob a Licença MIT - veja o texto abaixo para detalhes.
+Este projeto está licenciado sob a Licença MIT.
 
 ```text
 MIT License
@@ -200,6 +221,7 @@ SOFTWARE.
   * **Instituição:** CEFET-MG
   * **Data:** Novembro/2025
 
------
+<!-- end list -->
 
+```
 ```
