@@ -1,0 +1,22 @@
+# Configuracoes do Trabalho Pratico
+# Formato: CHAVE: VALOR
+
+# Configuracoes Gerais
+NUM_EXECUCOES: 40
+N_AVALIACOES: 20000
+N_POPULACAO: 50              # Este valor sera ignorado pelo AG (calculado dinamicamente)
+N_VARIAVEIS: 10
+FUNCAO_ESCOLHIDA: AMBAS
+
+# Parametros do Algoritmo Genetico (AG) - Padrao Professor
+AG_PROB_CRUZAMENTO: 0.9
+AG_PROB_MUTACAO_VAR: 0.1     # Sera ignorado (calculado como 1/nvar)
+AG_PROB_MUTACAO_IND: 0.5
+AG_ETA_CRUZ: 20.0            # Valor alto para ajuste fino (exploracao local)
+AG_ETA_MUT: 20.0             # Valor alto para ajuste fino
+AG_ELITISMO: 2
+
+# Parametros da Evolucao Diferencial (DE)
+# Variante: DE/rand/1/bin
+DE_F: 0.8
+DE_CR: 0.9
