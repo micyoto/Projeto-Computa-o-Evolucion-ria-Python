@@ -216,7 +216,7 @@ SOFTWARE.
 
 **Michael Yoshiaki Todoroki**
 
-  * **Curso:** Engenharia Mecatrônica
+  * **Curso:** Engenharia da Computação
   * **Disciplinas:** Linguagem de Programação & Computação Evolucionária
   * **Instituição:** CEFET-MG
   * **Data:** Novembro/2025
